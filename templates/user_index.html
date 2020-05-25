@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Welcome home, {{ current_user.username }}!</h1>
+    {% if current_user.is_student%}
+    <h3>The status of the account is: STUDENT </h3>
+    {% else %}
+    <h3>The status of the account is: PROFESSOR </h3>
+    {% endif %}
+</div>
+
+{% if current_user.is_student %}
+    <h3>Enrolled Class:</h3>
+    <div class="card-deck">
+        {% for enroll in enroll_info %} {# future update todo: https://www.codeply.com/go/nIB6oSbv6q #}
+            <div class="card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Old_book_bindings.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ enroll[0].course_id }}-{{ enroll[1].sec_no }}  {{ enroll[0].course_name }}</h5>
+                    <p class="card-text">
+                        <a href="{{ url_for('course_index',course=enroll[0].course_id,section=enroll[1].sec_no,teaching_status=False) }}"
+                           class="stretched-link">{{ enroll[0].course_description }}</a>
+                    </p>
+                    <p class="card-text"><small class="text-muted">Late Drop ddl: {{ enroll[0].late_drop_deadline }}</small></p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+    {% if teaching_info %}
+        <h3>Teaching Class:</h3>
+        <div class="card-deck">
+            {% for teaching in teaching_info %} {# future update todo: https://www.codeply.com/go/nIB6oSbv6q #}
+                <div class="card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Old_book_bindings.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ teaching[0].course_id }}-{{ teaching[1].sec_no }}  {{ teaching[0].course_name }}</h5>
+                        <p class="card-text">
+                            <a href="{{ url_for('course_index',course=teaching[0].course_id,section=teaching[1].sec_no,teaching_status=True) }}"
+                               class="stretched-link">{{ teaching[0].course_description }}</a>
+                        </p>
+                        <p class="card-text"><small class="text-muted">Teaching team ID: {{ teaching[1].teaching_team_id }}</small></p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
